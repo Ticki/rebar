@@ -81,7 +81,7 @@ impl Crate {
     }
 
     /// Convert this crate to a string of the format, "*:*:...", for example
-    /// "rust-lang:rust:the rust compiler"
+    /// "github:rust-lang:rust:the rust compiler"
     pub fn to_string(&self) -> String {
         format!("{}:{}", self.repo.name(), self.description)
     }
