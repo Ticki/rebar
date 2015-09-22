@@ -29,27 +29,19 @@
         word-wrap: break-word;
         margin-left: 4%;
         margin-right: 4%;
-        background-image:url(bg.png);
+        background-color: #FBFBFB;
     }
 
+    .sidebar {
+        vertical-align: top;
+        width: 10%;
+    }
     #state {
         position: absolute;
         left: 30%;
         top: 5%;
     }
-    #info {
-        position: absolute;
-        top: 40%;
-        right: 3%;
-        width: 15%;
-    }
-
-    .upload {
-        width: 10%;
-        position: absolute;
-        right: 8%;
-        top: 5px;
-    }
+    
    </style>
 
 </head>
@@ -57,6 +49,14 @@
     <img height="70" weight="70" src="logo.png">
     <label id="state">Hello there, hoooooman!</label>
 
+    <br><br>
+
+    <table>
+    <tr>
+    <td>
+    <table class="content"></table>
+    </td>
+    <td class="sidebar">
     <form target="_blank" class="upload" action="/query" method="get">
     <input type="hidden" value="add" name="action">
     Host:<br>
@@ -76,11 +76,9 @@
     <input type="submit" value="Add">
     </form> 
 
-    <br><br>
 
-    <table class="content"></table>
-
-    <label id="info"><u>What the hell is this?</u> Welcome to <i><b>Rebar</b></i>!. This is a place where you can share crates (Rust projects). Click on the smileys to upvote. No login is needed, however the hash value of your IP is stored when you vote or upload new crates.<br> <i>Made by Ticki.</i></b><br><br>Note: There's still much room for improvement, so check out Rebar on Github if you want to contribute.</label>
+    <label id="info"><u>What the hell is this?</u> Welcome to <i><b>Rebar</b></i>!. This is a place where you can share crates (Rust projects). Click on the smileys to upvote. No login is needed, however the hash value of your IP is stored when you vote or upload new crates.<br></b><br><br>Note: There's still much room for improvement, so check out Rebar on Github if you want to contribute.</label>
+    </td>
 
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="main.js"></script>
