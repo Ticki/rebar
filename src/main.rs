@@ -205,7 +205,7 @@ fn main() {
                     format!("ERROR: Action not supported.")
                 },
             }
-            // TODO: my eyes are bleeding
+            // TODO: my eyes are bleeding (bad formatting)
         } else {
             format!("ERROR: No action.")
         }
