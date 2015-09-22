@@ -1,5 +1,12 @@
 var server = "http://localhost:7272/query";
 var resp_crates = [];
+var respond = false;
+
+setTimeout(function () {
+    if (!respond) {
+        $("#state").html("<b>!!! Server not responding (try to refresh)... !!!</b>");
+    }
+}, 1000 * 2.5);
 
 $(document).ready(function() {
     for(var i = 0; i < 500; i++) {
@@ -26,6 +33,7 @@ function get_crates(callback) {
         data: {action : "list"},
         crossDomain: true,
         success: function(resp) {
+            respond = true;
             console.log("Respond: " + resp);
             var crates = resp.split(",");
             for (var i = 0; i < crates.length; i++) {
