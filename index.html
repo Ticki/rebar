@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Rebar</title>
+  <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <style>
+
+
+    a {
+        font: Helvetica,arial,nimbussansl,liberationsans,freesans,clean,sans-serif,"Segoe UI Emoji","Segoe UI Symbol";
+        font-weight: bold;
+        box-sizing: border-box;
+        color: #4078C0;
+    //  display: block;
+    //  padding: 6px 10px;
+        word-wrap: break-word;
+    }
+
+    body {
+        font-family: "Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;
+        line-height: 1.5;
+        word-wrap: break-word;
+        margin-left: 4%;
+        margin-right: 4%;
+        background-color: #FBFBFB;
+    }
+
+    .sidebar {
+        vertical-align: top;
+        width: 10%;
+    }
+    #state {
+        position: absolute;
+        left: 30%;
+        top: 5%;
+    }
+    
+   </style>
+
+</head>
+<body>
+    <img height="70" weight="70" src="logo.png">
+    <label id="state">Hello there, hoooooman!</label>
+
+    <br><br>
+
+    <table>
+    <tr>
+    <td>
+    <table class="content"></table>
+    </td>
+    <td class="sidebar">
+    <form target="_blank" class="upload" action="/query" method="get">
+    <input type="hidden" value="add" name="action">
+    Host:<br>
+    <select name="host">
+        <option value="github">Github</option>
+    </select>
+    <br>
+    Username:<br>
+    <input type="text" name="username" value="rust-lang">
+    <br>
+    Repo name:<br>
+    <input type="text" name="reponame" value="rust">
+    <br>
+    Description:<br>
+    <textarea name="desc" cols="23">Cool stuff.</textarea>
+    <br>
+    <input type="submit" value="Add">
+    </form> 
+
+
+    <label id="info"><u>What the hell is this?</u> Welcome to <i><b>Rebar</b></i>!. This is a place where you can share crates (Rust projects). Click on the smileys to upvote. No login is needed, however the hash value of your IP is stored when you vote or upload new crates.<br></b><br><br>Note: There's still much room for improvement, so check out Rebar on Github if you want to contribute.</label>
+    </td>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="main.js"></script>
+
+</body>
+</html>
