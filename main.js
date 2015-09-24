@@ -6,7 +6,7 @@ setTimeout(function () {
     if (!respond) {
         $("#state").html("<b>!!! Server not responding (try to refresh)... !!!</b>");
     }
-}, 1000 * 2.5);
+}, 1000 * 8);
 
 $(document).ready(function() {
     if (location.href.startsWith("https:")) {
