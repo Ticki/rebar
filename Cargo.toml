@@ -7,3 +7,6 @@ authors = ["Ticki <Ticki@users.noreply.github.com>"]
 time = "*"
 nickel = "*"
 hyper = "*"
+serde = "*"
+serde_macros = "*"
+serde_json = "*"

@@ -5,7 +5,7 @@ use std::collections::HashSet;
 use std::hash::*;
 
 /// A github repo
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct GithubRepo {
     /// The username
     pub user: String,
@@ -14,7 +14,7 @@ pub struct GithubRepo {
 }
 
 /// A crate storage (host + username + name)
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CrateStorage {
     /// Crate on github
     Github(GithubRepo),
@@ -28,7 +28,7 @@ impl CrateStorage {
 }
 
 /// A hashed (for the sake of privacy) IP
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Ip(u64);
 
 impl Ip {
@@ -41,7 +41,7 @@ impl Ip {
 }
 
 /// A crate
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 pub struct Crate {
     /// The description of this crate
     pub description: String,

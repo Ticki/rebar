@@ -84,18 +84,27 @@
 //! - `SUCC`: The query was sucessful.
 //! - `ERROR: [error message]`: Query failed.
 
+#![feature(custom_derive, plugin)]
+#![plugin(serde_macros)]
 
 #[macro_use] extern crate nickel;
 extern crate time;
 extern crate hyper;
+extern crate serde;
+extern crate serde_json;
 
+use std::io::prelude::*;
+use std::fs::File;
+use std::path::Path;
 use std::collections::{HashMap, HashSet};
 use nickel::{
     Nickel, QueryString, HttpRouter
 };
 use time::precise_time_s as now;
 use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use hyper::header::AccessControlAllowOrigin as ACAO;
+use std::env;
 
 pub mod showcase;
 pub mod crate_data;
@@ -104,6 +113,7 @@ use crate_data::*;
 
 // TODO: Save the showcase.
 fn main() {
+    let backup_path = env::var("REBAR_BACKUP").expect("REBAR_BACKUP is not set.");
     let showcase = Arc::new(Mutex::new(Showcase {
         crates: Vec::new(),
         shown_crates: Vec::new(),
@@ -112,6 +122,7 @@ fn main() {
         uploads: HashSet::new(),
     }));
     let mut server = Nickel::new();
+    let last_backup = AtomicUsize::new(0);
 
     server.utilize(middleware! { |request|
         println!("request: {:?}", request.origin.uri);
@@ -125,6 +136,24 @@ fn main() {
         let ip   = Ip::new(request.origin.remote_addr);
         let data = request.query();
         if let Some(action) = data.get("action") {
+            if last_backup.fetch_add(1, Ordering::SeqCst) > 10 {
+                // Back up the data
+                let path = Path::new(&backup_path);
+
+                match File::create(&path) {
+                   Err(_) => {},
+                   Ok(mut file) => {
+                       match file.write_all(serde_json::to_string(&*showcase.lock().unwrap()).unwrap().as_bytes()) {
+                           Ok(_) => {
+                               last_backup.store(0, Ordering::Relaxed);
+                           }
+                           Err(_) => {},
+                       }
+                   },
+                };
+            }
+
+
             match action {
                 "add" => {
                     if let Some(host) = data.get("host") {
@@ -135,7 +164,7 @@ fn main() {
                                         let username = username.trim();
                                         let reponame = reponame.trim();
                                         if username.contains(" ") || reponame.contains(" ") {
-                                            format!("ERROR: Data may not contain whitespaces")
+                                            format!("ERROR: Data may not contain whitespaces.")
                                         } else {
                                             let desc = data.get("desc").unwrap_or("");
                                             match showcase.lock().unwrap().add(Crate {
@@ -151,7 +180,7 @@ fn main() {
                                             }) {
                                                 Ok(()) => format!("SUCC"),
                                                 Err(UploadError::LimitReached) => format!("ERROR: Upload limit reached. Wait an hour."),
-                                                Err(UploadError::Duplicate) => format!("ERROR: This content has already been uploaded"),
+                                                Err(UploadError::Duplicate) => format!("ERROR: This content has already been uploaded."),
                                             }
                                         }
                                     } else {
@@ -214,6 +243,7 @@ fn main() {
                 },
             }
             // TODO: my eyes are bleeding (bad formatting)
+
         } else {
             format!("ERROR: No action.")
         }

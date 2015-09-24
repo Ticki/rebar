@@ -6,7 +6,7 @@ use std::collections::{HashMap, HashSet};
 
 // TODO: Make ::new() function instead
 /// The showcase
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Showcase {
     /// The uploaded crates
     pub crates: Vec<Crate>,
@@ -21,7 +21,7 @@ pub struct Showcase {
 }
 
 /// Upload errors
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub enum UploadError {
     /// The upload limit is reached
     LimitReached,
@@ -69,8 +69,8 @@ impl Showcase {
     }
     /// Add new crate to showcase
     pub fn add(&mut self, new: Crate) -> Result<(), UploadError> {
-        let data = new.to_string();
-        if !self.uploads.contains(&data) {
+        let name = new.repo.name();
+        if !self.uploads.contains(&name) {
             let now = now();
             // Make spam check
             let (time, rep) = *self.latest_upload.get(&new.uploader.clone()).unwrap_or(&(0.0, 0));
@@ -95,7 +95,7 @@ impl Showcase {
 
                 self.check_update();
 
-                self.uploads.insert(data);
+                self.uploads.insert(name);
 
                 Ok(())
             } else {
