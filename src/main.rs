@@ -113,7 +113,7 @@ use crate_data::*;
 
 // TODO: Save the showcase.
 fn main() {
-    let backup_path = env::var("REBAR_BACKUP").expect("REBAR_BACKUP is not set.");
+    let backup_path = env::var("REBAR_BACKUP").unwrap_or("rebar_data".to_string());
     let showcase = Arc::new(Mutex::new(Showcase {
         crates: Vec::new(),
         shown_crates: Vec::new(),
@@ -251,5 +251,5 @@ fn main() {
 
     server.utilize(router);
 
-    server.listen("95.85.34.50:7272");
+    server.listen(env!("REBAR_LISTEN"));
 }
