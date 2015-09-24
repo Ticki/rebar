@@ -3,6 +3,13 @@ Rebar
 
 Rebar is a simple system written in Rust where you can share crates with other rustaceans. It's inspired by Hacker News and Reddit and has a similar voting system. Check the docs for more info.
 
+It uses Nickel as web framework.
+
+Why?
+---
+
+For fun.
+
 Contributing
 ------------
 
