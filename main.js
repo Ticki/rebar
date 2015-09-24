@@ -9,6 +9,9 @@ setTimeout(function () {
 }, 1000 * 2.5);
 
 $(document).ready(function() {
+    if (location.href.startsWith("https:")) {
+        location.href = "http" + location.href.slice(5,location.href.length);
+    }
     for(var i = 0; i < 500; i++) {
         $(".content").append("<tr><td id='" + i + "-vote'></td><td> <a  id='" + i + "-url' /></td><td id='" + i + "-desc'></td></tr>");
     }
