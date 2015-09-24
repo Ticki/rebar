@@ -221,5 +221,5 @@ fn main() {
 
     server.utilize(router);
 
-    server.listen("127.0.0.1:7272");
+    server.listen("95.85.34.50:7272");
 }
