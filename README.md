@@ -16,3 +16,8 @@ Contributing
 Feel free to contribute! I especially need someone to make a good frontend as my HTML/CSS isn't very good.
 
 See also: TODO.md.
+
+License
+-------
+
+MIT
