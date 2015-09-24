@@ -131,20 +131,26 @@ fn main() {
                             "github" => {
                                 if let Some(username) = data.get("username") {
                                     if let Some(reponame) = data.get("reponame") {
-                                        let desc = data.get("desc").unwrap_or("");
-                                        match showcase.lock().unwrap().add(Crate {
-                                            description: desc.to_string(),
-                                            repo: CrateStorage::Github(GithubRepo {
-                                                user: username.to_string(),
-                                                name: reponame.to_string(),
-                                            }),
-                                            uploaded: now(),
-                                            uploader: ip,
-                                        votes: 0,
-                                            voters: HashSet::new(),
-                                        }) {
-                                            Ok(()) => format!("SUCC"),
-                                            Err(UploadError::LimitReached) => format!("ERROR: Upload limit reached. Wait an hour."),
+                                        let username = username.trim();
+                                        let reponame = reponame.trim();
+                                        if username.contains(" ") || reponame.contains(" ") {
+                                            format!("ERROR: Data may not contain whitespaces")
+                                        } else {
+                                            let desc = data.get("desc").unwrap_or("");
+                                            match showcase.lock().unwrap().add(Crate {
+                                                description: desc.to_string(),
+                                                repo: CrateStorage::Github(GithubRepo {
+                                                    user: username.to_string(),
+                                                    name: reponame.to_string(),
+                                                }),
+                                                uploaded: now(),
+                                                uploader: ip,
+                                            votes: 0,
+                                                voters: HashSet::new(),
+                                            }) {
+                                                Ok(()) => format!("SUCC"),
+                                                Err(UploadError::LimitReached) => format!("ERROR: Upload limit reached. Wait an hour."),
+                                            }
                                         }
                                     } else {
                                         format!("ERROR: No repo name given.")

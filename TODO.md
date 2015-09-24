@@ -12,5 +12,5 @@ Frontend
 
 Small minor tasks
 -----------------
-[ ] Trim for whitespaces.
+[x] Trim for whitespaces.
 [ ] Remove duplicates
