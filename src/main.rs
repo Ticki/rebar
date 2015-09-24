@@ -109,6 +109,7 @@ fn main() {
         shown_crates: Vec::new(),
         additions: 0,
         latest_upload: HashMap::new(),
+        uploads: HashSet::new(),
     }));
     let mut server = Nickel::new();
 
@@ -150,6 +151,7 @@ fn main() {
                                             }) {
                                                 Ok(()) => format!("SUCC"),
                                                 Err(UploadError::LimitReached) => format!("ERROR: Upload limit reached. Wait an hour."),
+                                                Err(UploadError::Duplicate) => format!("ERROR: This content has already been uploaded"),
                                             }
                                         }
                                     } else {
