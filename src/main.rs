@@ -151,15 +151,26 @@ fn main() {
             if last_backup.fetch_add(1, Ordering::SeqCst) > 10 {
                 // Back up the data
                 match File::create(&backup_path) {
-                   Err(_) => {},
-                   Ok(mut file) => {
-                       match file.write_all(serde_json::to_string(&*showcase.lock().unwrap()).unwrap().as_bytes()) {
-                           Ok(_) => {
-                               last_backup.store(0, Ordering::Relaxed);
-                               println!("Backup successful");
-                           }
-                           Err(_) => {},
-                       }
+                    Err(msg) => {
+                         println!("Failed to create backup file: {}", msg);
+                    },
+                    Ok(mut file) => {
+                        match serde_json::to_string(&*showcase.lock().unwrap()) {
+                            Ok(ser) => {
+                                match file.write_all(ser.as_bytes()) {
+                                    Ok(_) => {
+                                        last_backup.store(0, Ordering::Relaxed);
+                                        println!("Backup successful");
+                                    }
+                                    Err(msg) => {
+                                        println!("Failed to write to file: {}", msg);
+                                    },
+                                }
+                            },
+                            Err(msg) => {
+                                println!("Failed to serialize showcase: {}", msg);
+                            }
+                        }
                    },
                 };
             }
