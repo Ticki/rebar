@@ -95,7 +95,7 @@ extern crate serde_json;
 
 use std::io::prelude::*;
 use std::fs::File;
-use std::path::Path;
+use std::path::PathBuf;
 use std::collections::{HashMap, HashSet};
 use nickel::{
     Nickel, QueryString, HttpRouter
@@ -113,13 +113,25 @@ use crate_data::*;
 
 // TODO: Save the showcase.
 fn main() {
-    let backup_path = env::var("REBAR_BACKUP").unwrap_or("rebar_data".to_string());
-    let showcase = Arc::new(Mutex::new(Showcase {
-        crates: Vec::new(),
-        shown_crates: Vec::new(),
-        additions: 0,
-        latest_upload: HashMap::new(),
-        uploads: HashSet::new(),
+    let backup_path = PathBuf::from(&env::var("REBAR_BACKUP").unwrap_or("rebar_data".to_string()));
+    let showcase = Arc::new(Mutex::new(if env::args().nth(1).unwrap_or("".to_string()) == "-r".to_string() {
+        println!("Reading backup file...");
+        // Read backup file
+        let mut string = String::new();
+        File::open(&backup_path).expect("Failed to open backup file.")
+                                .read_to_string(&mut string)
+                                .expect("Failed to read backup file.");
+
+        serde_json::from_str::<Showcase>(&string).expect("Couldn't parse backup file")
+
+    } else {
+        Showcase {
+            crates: Vec::new(),
+            shown_crates: Vec::new(),
+            additions: 0,
+            latest_upload: HashMap::new(),
+            uploads: HashSet::new(),
+        }
     }));
     let mut server = Nickel::new();
     let last_backup = AtomicUsize::new(0);
@@ -138,14 +150,13 @@ fn main() {
         if let Some(action) = data.get("action") {
             if last_backup.fetch_add(1, Ordering::SeqCst) > 10 {
                 // Back up the data
-                let path = Path::new(&backup_path);
-
-                match File::create(&path) {
+                match File::create(&backup_path) {
                    Err(_) => {},
                    Ok(mut file) => {
                        match file.write_all(serde_json::to_string(&*showcase.lock().unwrap()).unwrap().as_bytes()) {
                            Ok(_) => {
                                last_backup.store(0, Ordering::Relaxed);
+                               println!("Backup successful");
                            }
                            Err(_) => {},
                        }
