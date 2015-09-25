@@ -1,4 +1,4 @@
-var server = "http://95.85.34.50:7272/query";
+var server = "http://95.85.34.50:80/query";
 var resp_crates = [];
 var respond = false;
 
