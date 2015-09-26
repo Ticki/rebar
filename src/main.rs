@@ -148,7 +148,7 @@ fn main() {
         let ip   = Ip::new(request.origin.remote_addr);
         let data = request.query();
         if let Some(action) = data.get("action") {
-            if last_backup.fetch_add(1, Ordering::SeqCst) > 10 {
+            if last_backup.fetch_add(1, Ordering::Relaxed) > 10 {
                 // Back up the data
                 match File::create(&backup_path) {
                     Err(msg) => {
