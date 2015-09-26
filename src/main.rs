@@ -135,6 +135,7 @@ fn main() {
     }));
     let mut server = Nickel::new();
     let last_backup = AtomicUsize::new(0);
+    let failed_backups = AtomicUsize::new(0);
 
     server.utilize(middleware! { |request|
         println!("request: {:?}", request.origin.uri);
@@ -148,7 +149,7 @@ fn main() {
         let ip   = Ip::new(request.origin.remote_addr);
         let data = request.query();
         if let Some(action) = data.get("action") {
-            if last_backup.fetch_add(1, Ordering::Relaxed) > 10 {
+            if last_backup.fetch_add(1, Ordering::Relaxed) > 30 {
                 // Back up the data
                 match File::create(&backup_path) {
                     Err(msg) => {
@@ -169,6 +170,9 @@ fn main() {
                             },
                             Err(msg) => {
                                 println!("Failed to serialize showcase: {}", msg);
+                                if failed_backups.fetch_add(1, Ordering::Relaxed) > 3 {
+                                    last_backup.store(0, Ordering::Relaxed);
+                                }
                             }
                         }
                    },
