@@ -39,7 +39,7 @@ function get_crates(callback) {
             respond = true;
             console.log("Respond: " + resp);
             var crates = resp.split(",");
-            for (var i = 0; i < crates.length; i++) {
+            for (var i = 0; i <= crates.length; i++) {
                 console.log("Requesting: " + i);
                 $.ajax({
                     type: "GET",
